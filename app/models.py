@@ -71,7 +71,7 @@ class Career(models.Model):
 	description = description = models.TextField(max_length=500)
 	public = models.BooleanField(choices = visibility_choices, default=1)
 	rate = models.SmallIntegerField(blank = True, null = True, default=0, editable=False);
-	estimated_time = models.SmallIntegerField(default=400)
+	estimated_time = models.SmallIntegerField(null=True, editable=False)
 	number_of_students = models.SmallIntegerField(default=0, editable=False);
 	tickets = models.ManyToManyField('Ticket')
 
@@ -90,8 +90,11 @@ class Enrollment(models.Model):
 		)
 	sprints = models.ManyToManyField('Sprint')
 
+	def __unicode__(self):
+		return "Student {0} in {1}".format(self.student.id, self.career.name)
+
 class TicketInsideSprint(models.Model):
-	progess_choices = (
+	progress_choices = (
 		(0, 'A fazer'),
 		(1, 'Em estudos'),
 		(2, 'Fazendo exercicios'),
@@ -101,11 +104,14 @@ class TicketInsideSprint(models.Model):
 	ticket = models.ForeignKey(
 		'Ticket',
 	)
-	progress = models.SmallIntegerField(default=0)
+	progress = models.SmallIntegerField(default=0, choices=progress_choices)
+
+	def __unicode__(self):
+		return "{0}: {1}".format(self.id, self.ticket.name)
 
 class Sprint(models.Model):
 	tickets = models.ManyToManyField('TicketInsideSprint')
 	beginning = models.DateTimeField(blank = True, null = True, default=now, editable=False)
 
 	def __unicode__(self):
-		return "Sprint: {0}".format(self.name)
+		return "Sprint: {0}".format(self.id)
