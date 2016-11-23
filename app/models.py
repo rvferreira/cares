@@ -25,7 +25,7 @@ class User(models.Model):
 	level_of_education = models.CharField(max_length = 1, choices = education_options, default = '3')
 	user_type = models.CharField(max_length = 1, choices = user_type_options)
 	date_of_birth = models.DateField(auto_now=False, auto_now_add=False, default=now)
-	speed = models.DecimalField(max_digits=6, decimal_places=3)
+	speed = models.DecimalField(max_digits=6, decimal_places=3, default=1, editable=False)
 
 	def __unicode__(self):
 		return "User: {0}".format(self.name)
@@ -66,9 +66,9 @@ class Career(models.Model):
 	name = models.CharField(max_length=140)
 	description = description = models.TextField(max_length=500)
 	public = models.BooleanField(choices = visibility_choices, default=1)
-	rate = models.SmallIntegerField(blank = True, null = True);
-	estimated_time = models.DurationField(default=timedelta(hours=400))
-	number_of_students = models.SmallIntegerField(default=0);
+	rate = models.SmallIntegerField(blank = True, null = True, default=0, editable=False);
+	estimated_time = models.SmallIntegerField(default=400)
+	number_of_students = models.SmallIntegerField(default=0, editable=False);
 	tickets = models.ManyToManyField('Ticket')
 
 	def __unicode__(self):
