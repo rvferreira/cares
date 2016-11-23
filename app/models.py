@@ -59,26 +59,20 @@ class Career(models.Model):
 		(0, 'Privada'),
 		(1, 'Publica')
 		)
+	author = models.ForeignKey(
+		'User',
+		null=True
+	)
 	name = models.CharField(max_length=140)
 	description = description = models.TextField(max_length=500)
 	public = models.BooleanField(choices = visibility_choices, default=1)
 	rate = models.SmallIntegerField(blank = True, null = True);
 	estimated_time = models.DurationField(default=timedelta(hours=400))
 	number_of_students = models.SmallIntegerField(default=0);
+	tickets = models.ManyToManyField('Ticket')
 
 	def __unicode__(self):
 		return "Carreira: {0}".format(self.name)
-
-
-class TicketInsideCareer(models.Model):
-	ticket = models.ForeignKey(
-		'Ticket',
-		on_delete = models.CASCADE,
-		)
-	career = models.ForeignKey(
-		'Career',
-		on_delete = models.CASCADE,
-		)
 
 
 class Enrollment(models.Model):
@@ -92,14 +86,17 @@ class Enrollment(models.Model):
 		)
 	sprints = models.ManyToManyField('Sprint')
 
+class TicketInsideSprint(models.Model):
+	ticket = models.ForeignKey(
+		'User',
+		null=True
+	)
+# 	sprint
+#	progress
 
 class Sprint(models.Model):
-	tickets = models.ManyToManyField('TicketInsideCareer')
-	beginnig = models.DateTimeField(blank = True, null = True)
-
-	def start(self):
-		self.beginnig = timezone.now()
-		self.save()
+	tickets = models.ManyToManyField('TicketInsideSprint')
+	beginning = models.DateTimeField(blank = True, null = True, default=now, editable=False)
 
 	def __unicode__(self):
 		return "Sprint: {0}".format(self.name)
