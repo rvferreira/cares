@@ -20,7 +20,7 @@ class User(models.Model):
 		)
 
 	name = models.CharField(max_length=300)
-	email = models.EmailField(max_length = 255, primary_key = True)
+	email = models.EmailField(max_length = 255, unique = True)
 	password = models.CharField(max_length = 30, default="&0k4f")
 	level_of_education = models.CharField(max_length = 1, choices = education_options, default = '3')
 	user_type = models.CharField(max_length = 1, choices = user_type_options)
@@ -28,7 +28,7 @@ class User(models.Model):
 	speed = models.DecimalField(max_digits=6, decimal_places=3, default=1, editable=False)
 
 	def __unicode__(self):
-		return "User: {0}".format(self.name)
+		return "ID: {0} User: {1}".format(self.id, self.email)
 
 
 class Topic(models.Model):
@@ -87,12 +87,17 @@ class Enrollment(models.Model):
 	sprints = models.ManyToManyField('Sprint')
 
 class TicketInsideSprint(models.Model):
-	ticket = models.ForeignKey(
-		'User',
-		null=True
+	progess_choices = (
+		(0, 'A fazer'),
+		(1, 'Em estudos'),
+		(2, 'Fazendo exercicios'),
+		(3, 'Em revisao'),
+		(4, 'Concluido'),
 	)
-# 	sprint
-#	progress
+	ticket = models.ForeignKey(
+		'Ticket',
+	)
+	progress = models.SmallIntegerField(default=0)
 
 class Sprint(models.Model):
 	tickets = models.ManyToManyField('TicketInsideSprint')
