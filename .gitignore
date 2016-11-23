@@ -4,4 +4,6 @@ db.sqlite3
 */*.pyc
 .Python
 .idea
+*.DS_Store
+static/*
 
