@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <title>
+        {% if page_title %}
+        {{ page_title }}
+        {% else %}
+        Cares
+        {% endif %}
+    </title>
+</head>
+
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>
