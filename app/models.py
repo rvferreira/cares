@@ -22,7 +22,7 @@ class User(models.Model):
 	name = models.CharField(max_length=300)
 	email = models.EmailField(max_length = 255, unique = True)
 	password = models.CharField(max_length = 30, default="&0k4f")
-	level_of_education = models.CharField(max_length = 1, choices = education_options, default = '3')
+	level_of_education = models.CharField(max_length = 1, choices = education_options, null = True)
 	user_type = models.CharField(max_length = 1, choices = user_type_options)
 	date_of_birth = models.DateField(auto_now=False, auto_now_add=False, default=now)
 	speed = models.DecimalField(max_digits=6, decimal_places=3, default=1, editable=False)
@@ -44,6 +44,10 @@ class Ticket(models.Model):
 	estimated_time = models.DurationField(default=timedelta(hours=8))
 	importance = models.SmallIntegerField(default=50)
 	description = models.TextField(max_length=500)
+	author = models.ForeignKey(
+		'User',
+		null=True
+	)
 	topic = models.ForeignKey(
 		'Topic',
 		on_delete = models.CASCADE,

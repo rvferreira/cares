@@ -1,10 +1,8 @@
-from django.conf.urls import url
-from rest_framework.urlpatterns import format_suffix_patterns
-from . import user
+from django.conf.urls import url, include
+from . import login
 
 urlpatterns = [
-    url(r'^user/$', user.UserList.as_view()),
-    url(r'^user/(?P<pk>[0-9]+)/$', user.UserDetail.as_view())
-]
+    url(r'^login/$', login.handler),
+    url(r'^user/', include('app.api.user.urls')),
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+]
