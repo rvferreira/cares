@@ -1,0 +1,2 @@
+INVALID_CREDENTIALS     =   -1
+MALFORMED_REQUEST       =   -2
