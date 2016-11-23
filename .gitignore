@@ -1,2 +1,7 @@
 cares-env
 db.sqlite3
+*.pyc
+*/*.pyc
+.Python
+.idea
+
