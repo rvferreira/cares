@@ -1,16 +1,18 @@
-
 from random import randrange, seed, choice
 from operator import attrgetter
-from copy import deepcopy
 
-OUT_PENALTY = 0.6
-IN_PENALTY = 0.05
-BONUS = 0.1
-INITIAL_FITNESS = 0
-SPRINT_POINTS = 40
-POPULATION_SIZE = 200
-MUTATION_INTENSITY = 3
-MUTATION_RATE = 0.3
+SPRINT_HOURS_TIME_SLOTS 			= 40
+
+# Fitness variables weight
+OUT_OF_SPRINT_DEPENDENCY_PENALTY 	= 0.6
+IN_SPRINT_DEPENDENCY_PENALTY 		= 0.05
+HAS_DEPENDANTS_BONUS 				= 0.1
+
+# Genetic parameters
+INITIAL_FITNESS 					= 0
+INITIAL_POPIULATION_SIZE 			= 200
+MUTATION_INTENSITY 					= 3
+MUTATION_RATE 						= 0.3
 
 
 def cria_tickets_aleatorios(numero_de_tickets):
@@ -65,13 +67,13 @@ class Ticket:
 		penalty_multiplier = 1;
 		for dependency in self.dependencies:
 			if dependency in keys_inside_sprint:
-				penalty_multiplier-= IN_PENALTY
+				penalty_multiplier-= IN_SPRINT_DEPENDENCY_PENALTY
 			else:
-				penalty_multiplier-= OUT_PENALTY
+				penalty_multiplier-= OUT_OF_SPRINT_DEPENDENCY_PENALTY
 
 		bonus_multiplier = 1;
 		for dependent in self.dependents:
-			bonus_multiplier+= BONUS
+			bonus_multiplier+= HAS_DEPENDANTS_BONUS
 
 		if penalty_multiplier<0:
 			return 0
@@ -86,7 +88,7 @@ class Sprint:
 		return self.fitness
 
 	def __init__(self, all_tickets):#all_tickets devem estar organizados por points, de menos pra mais.
-		points_left = SPRINT_POINTS;
+		points_left = SPRINT_HOURS_TIME_SLOTS;
 		tickets = []
 		tickets_left = all_tickets[:]
 
@@ -145,7 +147,7 @@ class Sprint:
 class Population:
 	def __init__(self, all_tickets):
 		self.population = []
-		for i in range(POPULATION_SIZE):
+		for i in range(INITIAL_POPIULATION_SIZE):
 			self.population.append(Sprint(all_tickets))
 
 	def computeFitness(self):
@@ -154,7 +156,7 @@ class Population:
 		(self.population).sort(key=attrgetter('fitness'))
 
 	def printFitness(self):
-		print('{0}'.format(self.population[POPULATION_SIZE-1].fitness))
+		print('{0}'.format(self.population[INITIAL_POPIULATION_SIZE-1].fitness))
 
 	def parents_select(self):
 		#Type of selection: Prioritizes best parents.
@@ -163,8 +165,8 @@ class Population:
 		second_parent_roll = 0.8 ** (randrange(0, 100)/(-5.077) - 1) - 1.2
 
 		# normalizing for population size
-		first_parent_roll = POPULATION_SIZE - 1 - int((first_parent_roll / 100.0) * len(self.population))
-		second_parent_roll = POPULATION_SIZE - 1 - int((second_parent_roll / 100.0) * len(self.population))
+		first_parent_roll = INITIAL_POPIULATION_SIZE - 1 - int((first_parent_roll / 100.0) * len(self.population))
+		second_parent_roll = INITIAL_POPIULATION_SIZE - 1 - int((second_parent_roll / 100.0) * len(self.population))
 
 		first_parent = self.population[first_parent_roll]
 		second_parent = self.population[second_parent_roll]
@@ -177,7 +179,7 @@ class Population:
 		a, b = self.parents_select()
 		parent = a[:] + b[:]
 
-		points_left = SPRINT_POINTS
+		points_left = SPRINT_HOURS_TIME_SLOTS
 
 		#Each chromossome of child is a copy of parent's chromossome, parent randomly chosen:
 		while points_left > 0 and len(parent)>0:
@@ -195,7 +197,7 @@ class Population:
 
 	def createChildren(self, all_tickets, mutation_rate, mutation_intensity):
 		children = []
-		for i in range(POPULATION_SIZE):
+		for i in range(INITIAL_POPIULATION_SIZE):
 			children.append(self.crossover())
 		self.mutation(children, all_tickets, mutation_rate, mutation_intensity)
 
@@ -205,7 +207,7 @@ class Population:
 		self.computeFitness()
 		self.population += self.createChildren(all_tickets, mutation_rate, mutation_intensity)
 		self.computeFitness()
-		self.population = self.population[POPULATION_SIZE:POPULATION_SIZE*2]
+		self.population = self.population[INITIAL_POPIULATION_SIZE:INITIAL_POPIULATION_SIZE*2]
 
 	def run_generation(self, number_of_generations, all_tickets, mutation_rate):
 		convergency_counter = 0
@@ -215,7 +217,7 @@ class Population:
 		for i in range(number_of_generations):
 			self.evolve(all_tickets, mutation_rate, mutation_intensity)
 			self.printFitness()
-			best_fitness_vector.append(self.population[POPULATION_SIZE-1].fitness)
+			best_fitness_vector.append(self.population[INITIAL_POPIULATION_SIZE-1].fitness)
 			if i>5 and best_fitness_vector[-1] == best_fitness_vector[-2]:
 				convergency_counter+=1
 				if (mutation_rate!=0):
@@ -227,7 +229,7 @@ class Population:
 				if mutation_rate!=0:
 					mutation_rate = MUTATION_RATE
 
-		return self.population[POPULATION_SIZE-1].ticket_array()
+		return self.population[INITIAL_POPIULATION_SIZE-1].ticket_array()
 
 	def mutation(self, children, all_tickets, mutation_rate, mutation_intensity):
 		#Mutation Mode: Plus_Minus
@@ -240,15 +242,15 @@ class Population:
 				chance = randrange(0, 100)/100.0
 				if chance<=mutation_rate: #ocorre mutacao
 					if randrange(0,2)==1:
-						if ticket.key+mutation_intensity < POPULATION_SIZE:
+						if ticket.key+mutation_intensity < INITIAL_POPIULATION_SIZE:
 							new_tickets.append(all_tickets[ticket.key+mutation_intensity])
 						else:
-							new_tickets.append(all_tickets[ticket.key+mutation_intensity - POPULATION_SIZE - 1])
+							new_tickets.append(all_tickets[ticket.key+mutation_intensity - INITIAL_POPIULATION_SIZE - 1])
 					else:
 						if ticket.key-mutation_intensity>=0:
 							new_tickets.append(all_tickets[ticket.key-mutation_intensity])
 						else:
-							new_tickets.append(all_tickets[POPULATION_SIZE + ticket.key-mutation_intensity])
+							new_tickets.append(all_tickets[INITIAL_POPIULATION_SIZE + ticket.key-mutation_intensity])
 				else:
 					new_tickets.append(ticket)
 
@@ -258,7 +260,7 @@ class Population:
 
 
 
-def main():
+def main(tickets=""):
 	m = 0
 	s = 0
 	tickets = cria_tickets_aleatorios(1000)
@@ -267,6 +269,4 @@ def main():
 	population = Population(tickets)
 	sprint = population.run_generation(50, tickets, MUTATION_RATE)
 	
-
-
 if __name__ == '__main__' : main()
