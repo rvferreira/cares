@@ -115,8 +115,8 @@ class TicketInsideSprint(models.Model):
 		return "{0}: {1}".format(self.id, self.ticket.name)
 
 class Sprint(models.Model):
-	tickets = models.ManyToManyField('TicketInsideSprint')
-	beginning = models.DateTimeField(blank = True, null = True, default=now, editable=False)
+	tickets = models.ManyToManyField('TicketInsideSprint', blank=True)
+	beginning = models.DateTimeField(default=now, editable=False)
 
 	def __unicode__(self):
 		return "Sprint: {0}".format(self.id)

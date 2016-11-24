@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="col-md-6 cta-button">
-                <a id="career-list-btn" href="#" class="btn btn-lg btn-block btn-primary">Let me see the list!</a>
+                <a id="career-list-btn" class="btn btn-lg btn-block btn-primary">Let me see the list!</a>
             </div>
         </div>
         <div id="list-loaded-content" style="display:none">
@@ -26,10 +26,10 @@
             </div>
             <div class="row">
                 <div class="col-sm-9 cta-button">
-                    <a id="career-enroll-btn" href="#" class="btn btn-lg btn-block btn-primary">Enroll!</a>
+                    <a id="career-enroll-btn" class="btn btn-lg btn-block btn-primary">Enroll!</a>
                 </div>
                 <div class="col-sm-3 cta-button">
-                    <a id="career-done-btn" href="#" class="btn btn-lg btn-block btn-primary">I'm done!</a>
+                    <a id="career-done-btn" class="btn btn-lg btn-block btn-primary">I'm done!</a>
                 </div>
             </div>
         </div>
@@ -65,7 +65,13 @@
     });
 
     $("#career-done-btn").click(function(){
-        $("#career-list-container").fadeOut(1000);
+        $.get( "/api/user/enrollment/" ).done(function(data){
+            if (!data.code) {
+                update_enrollment_list(data.result);
+                //$("#career-list-container").fadeOut(1000);
+            }
+            else snack(data.message);
+        });
     });
 
 </script>

@@ -22,9 +22,11 @@ def ApiFailure(error):
 
     return JsonResponse(data)
 
-def ApiSuccess():
+def ApiSuccess(result=""):
     data = {}
     data['code'] = 0
     data['message'] = 'Ok.'
+    if (result):
+        data['result'] = result
 
     return JsonResponse(data)

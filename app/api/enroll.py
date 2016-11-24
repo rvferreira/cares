@@ -1,6 +1,7 @@
 from lib.api import ApiSuccess, ApiFailure
 from lib.error_codes import *
-from app.models import User, Career, Enrollment
+from lib.generator import main as generate_sprint
+from app.models import User, Career, Enrollment, Ticket, TicketInsideSprint, Sprint
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -37,12 +38,27 @@ def handler(request):
         e = Enrollment.objects.get(student=user, career=career)
     except:
 
+        sprint = Sprint()
+        sprint.save()
+
+        generated_sprint = generate_sprint(career.tickets.all())
+        for ticket_id in generated_sprint:
+            t = Ticket.objects.get(id=ticket_id)
+            tis = TicketInsideSprint(ticket=t)
+            tis.save()
+
+            sprint.tickets.add(tis)
+            sprint.save()
+
+
         try:
             e = Enrollment(
                 student=user,
                 career=career,
             )
+            e.save()
 
+            e.sprints.add(sprint)
             e.save()
 
         except:
