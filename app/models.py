@@ -17,14 +17,14 @@ class User(models.Model):
 		('6', 'Superior concluido'),
 		('7', 'Pos cursando'),
 		('8', 'Pos concluido')
-		)
+	)
 
-	name = models.CharField(max_length=300)
+	name = models.CharField(max_length=300, null=True)
 	email = models.EmailField(max_length = 255, unique = True)
-	password = models.CharField(max_length = 30, default="&0k4f")
-	level_of_education = models.CharField(max_length = 1, choices = education_options, null = True)
-	user_type = models.CharField(max_length = 1, choices = user_type_options)
-	date_of_birth = models.DateField(auto_now=False, auto_now_add=False, default=now)
+	password = models.CharField(max_length = 30, null=True)
+	level_of_education = models.SmallIntegerField(choices = education_options, null = True)
+	user_type = models.SmallIntegerField(default=0, choices = user_type_options)
+	date_of_birth = models.DateField(auto_now=False, auto_now_add=False, null=True)
 	speed = models.DecimalField(max_digits=6, decimal_places=3, default=1, editable=False)
 
 	def __unicode__(self):
@@ -68,7 +68,7 @@ class Career(models.Model):
 		null=True
 	)
 	name = models.CharField(max_length=140)
-	description = description = models.TextField(max_length=500)
+	description = models.TextField(max_length=500)
 	public = models.BooleanField(choices = visibility_choices, default=1)
 	rate = models.SmallIntegerField(blank = True, null = True, default=0, editable=False);
 	estimated_time = models.SmallIntegerField(null=True, editable=False)

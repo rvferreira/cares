@@ -1,0 +1,52 @@
+<div id="user-init-container" class="col-sm-12">
+    <div class="bs-calltoaction bs-calltoaction-default">
+        <div class="row">
+            <div class="col-md-6 cta-contents">
+                <h1 class="cta-title">User Init</h1>
+                <div class="cta-desc">
+                    <p>This snippet will start by creating a random generated student account.</p>
+                    <p>Then, it will login into that user's account.</p>
+                    <p>Now, the session cookie is available!</p>
+                </div>
+            </div>
+            <br>
+            <div class="col-md-6 form-group">
+                <input type="email" class="form-control" id="email-field" aria-describedby="emailHelp" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 cta-button">
+                <a id="user-init-btn" href="#" class="btn btn-lg btn-block btn-default">Go for It!</a>
+            </div>
+         </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var pw = "abc123";
+
+    $("#user-init-btn").click(function(){
+        var email = $("#email-field").val();
+
+        $.post( "/api/signup/", {
+            name: "Raph",
+            email: email,
+            password: pw,
+            level_of_education: 0,
+            user_type: 2
+        }).done(function(data){
+            if (!data.code) $.post( "/api/login/", {
+                email: email,
+                password: pw
+            }).done(function(data2){
+                    if (!data2.code) {
+                        $("#user-init-container").fadeOut(1000);
+                        snack("Account created and logged in");
+                    }
+                    else snack(data.message);
+                });
+            else snack(data.message);
+        })
+    });
+</script>

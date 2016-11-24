@@ -1,0 +1,49 @@
+<div id="career-list-container" class="col-sm-12">
+    <div class="bs-calltoaction bs-calltoaction-primary">
+        <div class="row">
+            <div class="col-md-6 cta-contents">
+                <h1 class="cta-title">Careers List</h1>
+                <div class="cta-desc">
+                    <p>Once logged in, a user can check the list of available careers.</p>
+                </div>
+            </div>
+            <div class="col-md-6 cta-button">
+                <a id="career-list-btn" href="#" class="btn btn-lg btn-block btn-primary">Let me see the list!</a>
+            </div>
+        </div>
+        <div id="list-loaded-content" style="display:none">
+            <br>
+            <div class="row">
+                <div class="col-md-6 cta-contents">
+                    <div class="cta-desc">
+                        <p>Then, the user can enroll in any of the available careers.</p>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 cta-contents">
+                    <select class="form-control" id="career-list">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12 cta-button">
+                    <a id="career-list-btn" href="#" class="btn btn-lg btn-block btn-primary">Enroll!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#career-list-btn").click(function(){
+        $.get( "/api/career" ).done(function(data){
+            data.forEach(function(career){
+                var option = new Option("Career: " + career.name + ", author: " + career.author.name, career.id);
+                $("#career-list").append($(option));
+                $("#list-loaded-content").fadeIn();
+            });
+        }).catch(function(e){
+            snack(e.statusText);
+        });
+    });
+</script>

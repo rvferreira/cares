@@ -18,14 +18,12 @@ class SimplifiedTicketSerializer(serializers.ModelSerializer):
 
 class TicketInsideSprintSerializer(serializers.ModelSerializer):
     ticket = SimplifiedTicketSerializer()
-
     class Meta:
         model = TicketInsideSprint
         fields = ('ticket', 'progress')
 
 class SprintSerializer(serializers.ModelSerializer):
-    tickets = TicketInsideSprint()
-
+    tickets = TicketInsideSprintSerializer(many=True)
     class Meta:
         model = Sprint
         fields = ('id', 'beginning', 'tickets')
@@ -34,12 +32,19 @@ class SimplifiedCareerSerializer(serializers.ModelSerializer):
     author = SimplifiedUserSerializer()
     class Meta:
         model = Career
-        fields = ('name', 'id', 'author', 'estimated_time')
+        fields = ('id', 'name', 'author', 'estimated_time')
 
 class UserEnrollmentSerializer(serializers.ModelSerializer):
-    # career = SimplifiedCareerSerializer()
-    # sprints = SprintSerializer()
+    career = SimplifiedCareerSerializer()
+    sprints = SprintSerializer(many=True)
 
     class Meta:
         model = Enrollment
         fields = ('id', 'career', 'sprints')
+
+class CareerSerializer(serializers.ModelSerializer):
+    author = SimplifiedUserSerializer()
+
+    class Meta:
+        model = Career
+        fields = ('id', 'name', 'description', 'author', 'estimated_time', 'tickets')
