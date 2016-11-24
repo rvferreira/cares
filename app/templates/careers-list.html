@@ -25,9 +25,11 @@
                 </div>
             </div>
             <div class="row">
-
-                <div class="col-md-12 cta-button">
-                    <a id="career-list-btn" href="#" class="btn btn-lg btn-block btn-primary">Enroll!</a>
+                <div class="col-sm-9 cta-button">
+                    <a id="career-enroll-btn" href="#" class="btn btn-lg btn-block btn-primary">Enroll!</a>
+                </div>
+                <div class="col-sm-3 cta-button">
+                    <a id="career-done-btn" href="#" class="btn btn-lg btn-block btn-primary">I'm done!</a>
                 </div>
             </div>
         </div>
@@ -36,7 +38,8 @@
 
 <script type="text/javascript">
     $("#career-list-btn").click(function(){
-        $.get( "/api/career" ).done(function(data){
+        $.get( "/api/career/" ).done(function(data){
+            $("#career-list").empty();
             data.forEach(function(career){
                 var option = new Option("Career: " + career.name + ", author: " + career.author.name, career.id);
                 $("#career-list").append($(option));
@@ -46,4 +49,23 @@
             snack(e.statusText);
         });
     });
+
+    $("#career-enroll-btn").click(function(){
+        var career = $("#career-list").val();
+
+        $.post( "/api/enroll/" , {
+            career: career
+        }).done(function(data){
+            if (!data.code) {
+                snack("You've successfully enrolled in that career!");
+            }
+            else snack(data.message);
+        });
+
+    });
+
+    $("#career-done-btn").click(function(){
+        $("#career-list-container").fadeOut(1000);
+    });
+
 </script>

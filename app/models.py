@@ -88,7 +88,7 @@ class Enrollment(models.Model):
 		'Career',
 		on_delete = models.CASCADE
 		)
-	sprints = models.ManyToManyField('Sprint')
+	sprints = models.ManyToManyField('Sprint', blank=True)
 
 	def __unicode__(self):
 		return "Student {0} in {1}".format(self.student.id, self.career.name)

@@ -16,8 +16,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 cta-button">
+            <div>
+            <div class="col-sm-9 cta-button">
                 <a id="user-init-btn" href="#" class="btn btn-lg btn-block btn-default">Go for It!</a>
+            </div>
+            <div class="col-sm-3 cta-button">
+                <a id="user-done-btn" href="#" class="btn btn-lg btn-block btn-default">I'm done!</a>
+            </div>
             </div>
          </div>
     </div>
@@ -41,12 +46,14 @@
                 password: pw
             }).done(function(data2){
                     if (!data2.code) {
-                        $("#user-init-container").fadeOut(1000);
                         snack("Account created and logged in");
                     }
                     else snack(data.message);
                 });
             else snack(data.message);
         })
+    });
+    $("#user-done-btn").click(function(){
+        $("#user-init-container").fadeOut(1000);
     });
 </script>
