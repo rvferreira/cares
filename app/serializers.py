@@ -42,8 +42,14 @@ class UserEnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = ('id', 'career', 'sprints')
 
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ('id', 'importance', 'estimated_time', 'dependencies')
+
 class CareerSerializer(serializers.ModelSerializer):
     author = SimplifiedUserSerializer()
+    tickets = TicketSerializer(many=True)
 
     class Meta:
         model = Career

@@ -41,7 +41,7 @@ class Topic(models.Model):
 class Ticket(models.Model):
 	#a primary key is automatically generated
 	name = models.CharField(max_length=140)
-	estimated_time = models.DurationField(default=timedelta(hours=8))
+	estimated_time = models.SmallIntegerField(default=4)
 	importance = models.SmallIntegerField(default=50)
 	description = models.TextField(max_length=500)
 	author = models.ForeignKey(
@@ -52,7 +52,11 @@ class Ticket(models.Model):
 		'Topic',
 		on_delete = models.CASCADE,
 		null=True,
-		)
+	)
+	dependencies = models.ManyToManyField(
+		'Ticket',
+		blank=True
+	)
 
 	def __unicode__(self):
 		return "Ticket: {0}".format(self.name)
@@ -89,6 +93,7 @@ class Enrollment(models.Model):
 		on_delete = models.CASCADE
 		)
 	sprints = models.ManyToManyField('Sprint', blank=True)
+	daily_hours_commitment = models.SmallIntegerField(default=4)
 
 	def __unicode__(self):
 		return "Student {0} in {1}".format(self.student.id, self.career.name)
