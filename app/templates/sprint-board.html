@@ -32,7 +32,7 @@
 
 </style>
 
-<div id="sprint-board-container" class="col-sm-12">
+<div id="sprint-board-container" style="display:none" class="col-sm-12">
     <div class="bs-calltoaction bs-calltoaction-success">
         <div class="row">
             <div class="col-sm-6 cta-contents">
@@ -72,7 +72,7 @@
                 <kbd>{ticket_topic}</kbd>
             </div>
 
-            <div class="row">
+            <div id="{tis_id}" class="row">
                 <div class="col-sm-6 cta-contents">
                     <a class="rewind-ticket card-link">
                         <span class="glyphicon glyphicon-arrow-left"></span>
@@ -87,83 +87,61 @@
         </div>
     `;
 
-    tickets = [
-        {
-            id: 0,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 1,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 2,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 3,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 4,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 5,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 6,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-        {
-            id: 7,
-            name: "test",
-            topic: "blah",
-            progress: 0,
-            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
-        },
-    ];
-
-    tickets.forEach(function(ticket){
-        String.prototype.replaceAll = function(search, replacement) {
-            var target = this;
-            return target.split(search).join(replacement);
-        };
-
-        var new_ticket = ticket_component;
-        new_ticket = new_ticket.replaceAll('{ticket_id}', ticket.id);
-        new_ticket = new_ticket.replaceAll('{ticket_name}', ticket.name);
-        new_ticket = new_ticket.replaceAll('{ticket_topic}', ticket.topic);
-        new_ticket = new_ticket.replaceAll('{ticket_description}', ticket.description);
-        $(".sprint-col:eq(" + ticket.progress + ")").append($(new_ticket));
-    });
-
-    $(".forward-ticket").click(function(){
-        $.put( "/api/ticket/forward/" , {
-            ticket: $(this).parent().parent().parent()[0].id
+    function _refresh_sprint_board(){
+        $("#sprint-board-container").fadeOut(1000, function(){
+            $.get( "/api/sprint/latest/" , {
+                enrollment: enroll_list_val
+            }).done(function(data){
+                if (!data.code){
+                    refresh_sprint_board(data.result);
+                    $("#sprint-board-container").fadeIn(1000);
+                }
+                else snack(data.message);
+            });
         });
-    });
+    }
+
+    function refresh_sprint_board(tickets){
+
+        $(".ticket-container").remove();
+
+        tickets.forEach(function(ticket){
+            String.prototype.replaceAll = function(search, replacement) {
+                var target = this;
+                return target.split(search).join(replacement);
+            };
+
+            var new_ticket = ticket_component;
+            new_ticket = new_ticket.replaceAll('{ticket_id}', ticket.id);
+            new_ticket = new_ticket.replaceAll('{tis_id}', ticket.tis_id);
+            new_ticket = new_ticket.replaceAll('{ticket_name}', ticket.name);
+            new_ticket = new_ticket.replaceAll('{ticket_topic}', ticket.topic);
+            new_ticket = new_ticket.replaceAll('{ticket_description}', ticket.description);
+            $(".sprint-col:eq(" + ticket.progress + ")").append($(new_ticket));
+        });
+
+        $(".forward-ticket").click(function(){
+            $.post( "/api/ticket/forward/" , {
+                tis_id: $(this).parent().parent()[0].id
+            }).done(function(data){
+                if (!data.code) {
+                    _refresh_sprint_board();
+                }
+                else snack(data.message);
+            });
+        });
+
+        $(".rewind-ticket").click(function(){
+            $.post( "/api/ticket/rewind/" , {
+                tis_id: $(this).parent().parent()[0].id
+            }).done(function(data){
+                if (!data.code) {
+                    _refresh_sprint_board();
+                }
+                else snack(data.message);
+            });
+        });
+
+    }
 
 </script>

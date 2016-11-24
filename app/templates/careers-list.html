@@ -1,4 +1,4 @@
-<div id="career-list-container" class="col-sm-12">
+<div id="career-list-container" style="display:none" class="col-sm-12">
     <div class="bs-calltoaction bs-calltoaction-primary">
         <div class="row">
             <div class="col-md-6 cta-contents">
@@ -68,7 +68,9 @@
         $.get( "/api/user/enrollment/" ).done(function(data){
             if (!data.code) {
                 update_enrollment_list(data.result);
-                //$("#career-list-container").fadeOut(1000);
+                $("#career-list-container").fadeOut(1000, function(){
+                    $("#enrollment-list-container").fadeIn(1000);
+                });
             }
             else snack(data.message);
         });

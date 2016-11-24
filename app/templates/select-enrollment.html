@@ -1,4 +1,4 @@
-<div id="career-list-container" class="col-sm-12">
+<div id="enrollment-list-container" style="display:none" class="col-sm-12">
     <div class="bs-calltoaction bs-calltoaction-default">
         <div class="row">
             <div class="col-md-6 cta-contents">
@@ -17,13 +17,14 @@
             </div>
 
             <div class="col-sm-6 cta-button">
-                <a id="sprint-check-btn" href="#" class="btn btn-lg btn-block btn-default">Check sprint!</a>
+                <a id="sprint-check-btn" class="btn btn-lg btn-block btn-default">Check sprint!</a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    var enroll_list_val;
     function update_enrollment_list(enrollment_list){
         $("#enroll-list").empty();
         enrollment_list.forEach(function(enrollment){
@@ -31,4 +32,19 @@
             $("#enroll-list").append($(option));
         });
     }
+
+    $("#sprint-check-btn").click(function(){
+        enroll_list_val = $("#enroll-list").val()
+        $.get( "/api/sprint/latest/" , {
+            enrollment: enroll_list_val
+        }).done(function(data){
+            if (!data.code){
+                refresh_sprint_board(data.result);
+                $("#enrollment-list-container").fadeOut(1000, function(){
+                    $("#sprint-board-container").fadeIn(1000);
+                });
+            }
+            else snack(data.message);
+        });
+    });
 </script>

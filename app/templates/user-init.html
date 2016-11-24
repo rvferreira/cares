@@ -54,6 +54,8 @@
         })
     });
     $("#user-done-btn").click(function(){
-        $("#user-init-container").fadeOut(1000);
+        $("#user-init-container").fadeOut(1000, function(){
+            $("#career-list-container").fadeIn(1000);
+        });
     });
 </script>

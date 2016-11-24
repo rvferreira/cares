@@ -3,17 +3,20 @@ from error_codes import *
 
 def ApiFailure(error):
     error_strings = {
-        INVALID_CREDENTIALS:    "Invalid credentials.",
-        MALFORMED_REQUEST:      "Malformed request.",
-        LOGOUT_FAILURE:         "Logout failed.",
-        SIGNUP_FAILURE:         "Sorry, your account creation has failed.",
-        USER_COLISION:          "This e-mail is already in use by another account. Use the password reset.",
-        NEED_LOGIN:             "You need to login to perform this operation.",
-        BAD_PARAMS:             "Bad parameters.",
-        ENROLL_FAILURE:         "Sorry, your enrollment has failed.",
-        ALREADY_ENROLLED:       "User is already enrolled in this career.",
-        NOT_A_STUDENT:          "User is not a student.",
-        NOT_A_PROFESSOR:        "User is not a professor.",
+        INVALID_CREDENTIALS:        "Invalid credentials.",
+        MALFORMED_REQUEST:          "Malformed request.",
+        LOGOUT_FAILURE:             "Logout failed.",
+        SIGNUP_FAILURE:             "Sorry, your account creation has failed.",
+        USER_COLISION:              "This e-mail is already in use by another account. Use the password reset.",
+        NEED_LOGIN:                 "You need to login to perform this operation.",
+        BAD_PARAMS:                 "Bad parameters.",
+        ENROLL_FAILURE:             "Sorry, your enrollment has failed.",
+        ALREADY_ENROLLED:           "User is already enrolled in this career.",
+        NOT_A_STUDENT:              "User is not a student.",
+        NOT_A_PROFESSOR:            "User is not a professor.",
+        GET_SPRINT_FAILURE:         "Sorry, we couldn't find the latest sprint.",
+        GET_ENROLLMENTS_FAILURE:    "Sorry, we couldn't find your enrollments.",
+        MOVE_TICKET_FAILURE:        "Sorry, we couldn't move your ticket."
     }
 
     data = {}

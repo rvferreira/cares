@@ -36,13 +36,17 @@ def get_all_enrollments(request):
     except:
         return ApiFailure(BAD_PARAMS)
 
-    enrollments = []
-    e = Enrollment.objects.filter(student=user).all()
+    try:
+        enrollments = []
+        e = Enrollment.objects.filter(student=user).all()
 
-    for elem in e:
-        enrollments.append({
-            'id': elem.id,
-            'career': elem.career.name
-        })
+        for elem in e:
+            enrollments.append({
+                'id': elem.id,
+                'career': elem.career.name
+            })
+
+    except:
+        ApiFailure(GET_ENROLLMENTS_FAILURE)
 
     return ApiSuccess(enrollments)

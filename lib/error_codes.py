@@ -9,3 +9,6 @@ ENROLL_FAILURE          =   -8
 ALREADY_ENROLLED        =   -9
 NOT_A_STUDENT           =   -10
 NOT_A_PROFESSOR         =   -11
+GET_SPRINT_FAILURE      =   -12
+GET_ENROLLMENTS_FAILURE =   -13
+MOVE_TICKET_FAILURE     =   -14
