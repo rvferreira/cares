@@ -158,14 +158,26 @@ However, delay the fade out process for 2.5 seconds */
     to {bottom: 0; opacity: 0;}
 }
 
+.vertical-center {
+  background-color: #DDD;
+
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
 </style>
 {% endblock %}
 {% block content %}
+<div class="vertical-center">
 <div class="container">
     {% include 'user-init.html' %}
     {% include 'careers-list.html' %}
     {% include 'select-enrollment.html' %}
     {% include 'sprint-board.html' %}
+</div>
 </div>
 
 <div id="snackbar"/>

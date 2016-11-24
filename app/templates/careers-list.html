@@ -68,8 +68,8 @@
         $.get( "/api/user/enrollment/" ).done(function(data){
             if (!data.code) {
                 update_enrollment_list(data.result);
-                $("#career-list-container").fadeOut(1000, function(){
-                    $("#enrollment-list-container").fadeIn(1000);
+                $("#career-list-container").fadeOut(300, function(){
+                    $("#enrollment-list-container").fadeIn(300);
                 });
             }
             else snack(data.message);
