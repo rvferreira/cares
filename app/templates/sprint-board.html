@@ -1,0 +1,169 @@
+<style>
+    .sprint-col{
+        border-style: solid;
+        border-width: 1px;
+        vertical-align: top !important;
+        padding: 0;
+    }
+
+    .sprint-col h4{
+        padding: 20px 15px 20px 15px;
+        margin: 0;
+    }
+
+    .ticket-container {
+        color: #333;
+        background-color: #fff;
+        border-color: #333;
+        margin-bottom: 1px;
+    }
+
+    .glyphicon-arrow-right {
+        float:right;
+    }
+
+    .ticket-name {
+        margin-top: 20px;
+    }
+
+    .topic-container {
+        margin: 0 15px 0 15px;
+    }
+
+</style>
+
+<div id="sprint-board-container" class="col-sm-12">
+    <div class="bs-calltoaction bs-calltoaction-success">
+        <div class="row">
+            <div class="col-sm-6 cta-contents">
+                <h1 class="cta-title">Sprint Board</h1>
+                <div class="cta-desc">
+                    <p>You can now move your tickets inside your sprint!</p>
+                </div>
+            </div>
+            <div class="col-sm-6 cta-contents"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 sprint-col">
+                <h4>To Do</h4>
+            </div>
+            <div class="col-sm-2 sprint-col">
+                <h4>In Study</h4>
+            </div>
+            <div class="col-sm-2 sprint-col">
+                <h4>In Exercise</h4>
+            </div>
+            <div class="col-sm-2 sprint-col">
+                <h4>In Review</h4>
+            </div>
+            <div class="col-sm-2 sprint-col">
+                <h4>Done</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ticket_component = `
+        <div id="{ticket_id}" class="col-sm-12 card card-block ticket-container">
+            <h5 class="card-title ticket-name">{ticket_id}: {ticket_name}</h5>
+            <p class="card-text">{ticket_description}</p>
+            <div class="row topic-container text-center">
+                <kbd>{ticket_topic}</kbd>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 cta-contents">
+                    <a class="rewind-ticket card-link">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </a>
+                </div>
+                <div class="col-sm-6 cta-contents">
+                    <a class="forward-ticket card-link">
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    tickets = [
+        {
+            id: 0,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 1,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 2,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 3,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 4,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 5,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 6,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+        {
+            id: 7,
+            name: "test",
+            topic: "blah",
+            progress: 0,
+            description: "blashbdsa fuasfa fisafa fiasfdif sufdsfidusgf a"
+        },
+    ];
+
+    tickets.forEach(function(ticket){
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.split(search).join(replacement);
+        };
+
+        var new_ticket = ticket_component;
+        new_ticket = new_ticket.replaceAll('{ticket_id}', ticket.id);
+        new_ticket = new_ticket.replaceAll('{ticket_name}', ticket.name);
+        new_ticket = new_ticket.replaceAll('{ticket_topic}', ticket.topic);
+        new_ticket = new_ticket.replaceAll('{ticket_description}', ticket.description);
+        $(".sprint-col:eq(" + ticket.progress + ")").append($(new_ticket));
+    });
+
+    $(".forward-ticket").click(function(){
+        $.put( "/api/ticket/forward/" , {
+            ticket: $(this).parent().parent().parent()[0].id
+        });
+    });
+
+</script>
